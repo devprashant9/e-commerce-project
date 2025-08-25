@@ -12,10 +12,7 @@ export const createPayPalOrder = async (req, res) => {
     try {
         const { items, totalAmount } = req.body;
 
-        console.log('Received request to create PayPal order:', {
-            items,
-            totalAmount
-        });
+
 
         if (!items || !Array.isArray(items) || items.length === 0) {
             console.error('Invalid items data received');
@@ -34,7 +31,7 @@ export const createPayPalOrder = async (req, res) => {
         }
 
         // Get access token from PayPal
-        console.log('Requesting PayPal access token...');
+       
         const authResponse = await axios.post(
             `${PAYPAL_API_URL}/v1/oauth2/token`,
             'grant_type=client_credentials',
@@ -54,7 +51,7 @@ export const createPayPalOrder = async (req, res) => {
             throw new Error('Failed to get PayPal access token');
         }
 
-        console.log('Successfully obtained PayPal access token');
+       
 
         // Convert INR to USD (approximate conversion)
         const usdAmount = (totalAmount / 83).toFixed(2);
@@ -72,7 +69,7 @@ export const createPayPalOrder = async (req, res) => {
             ]
         };
 
-        console.log('Creating PayPal order with data:', orderData);
+       
 
         const orderResponse = await axios.post(
             `${PAYPAL_API_URL}/v2/checkout/orders`,
@@ -86,7 +83,7 @@ export const createPayPalOrder = async (req, res) => {
             }
         );
 
-        console.log('PayPal order created successfully:', orderResponse.data);
+       
         return res.json(orderResponse.data);
     } catch (error) {
         console.error('PayPal order creation error:', {
@@ -146,10 +143,10 @@ export const capturePayPalPayment = async (req, res) => {
 
         return res.json(captureResponse.data);
     } catch (error) {
-        console.error('PayPal payment capture error:', error.response?.data || error);
+        console.error('PayPal payment capture error:', error.response?.data || error.message);
         return res.status(500).json({
             message: 'Failed to capture PayPal payment',
-            error: error.response?.data?.message || error.message
+            error: error.response?.data || error.message
         });
     }
 }; 

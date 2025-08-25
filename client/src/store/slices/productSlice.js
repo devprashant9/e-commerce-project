@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
-    async ({ page = 1, limit = 10, sort = '-createdAt', search = '', category = '' }) => {
+    async ({ page = 1, limit = 12, sort = '-createdAt', search = '', category = '' }) => {
         const url = `${API_URL}/products?page=${page}&limit=${limit}&sort=${sort}&search=${search}&category=${category}`;
         const response = await axios.get(url);
         return response.data;
@@ -42,10 +42,8 @@ const productSlice = createSlice({
         setFilter: (state, action) => {
             state.filters = { ...state.filters, ...action.payload };
 
-            // If the filter is category, we don't apply client-side filtering
-            // as it will be handled by the API call
             if (!action.payload.category) {
-                // Apply other filters (search and price) client-side
+                // Apply search/price client-side
                 state.filteredItems = state.items.filter(product => {
                     const matchesSearch =
                         product.name.toLowerCase().includes(state.filters.search.toLowerCase()) ||
@@ -54,7 +52,9 @@ const productSlice = createSlice({
 
                     const matchesPrice =
                         product.price >= state.filters.priceRange.min &&
-                        product.price <= (state.filters.priceRange.max === Infinity ? Number.MAX_SAFE_INTEGER : state.filters.priceRange.max);
+                        product.price <= (state.filters.priceRange.max === Infinity
+                            ? Number.MAX_SAFE_INTEGER
+                            : state.filters.priceRange.max);
 
                     return matchesSearch && matchesPrice;
                 });
@@ -69,7 +69,7 @@ const productSlice = createSlice({
             state.status = 'idle';
         },
         setPage: (state, action) => {
-            state.pagination.page = action.payload;
+            state.pagination.page = action.payload; // only update current page
         }
     },
     extraReducers: (builder) => {
@@ -83,8 +83,8 @@ const productSlice = createSlice({
                 state.items = action.payload.products;
                 state.filteredItems = action.payload.products;
                 state.pagination = {
-                    page: action.payload.page,
-                    pages: action.payload.pages,
+                    page: action.payload.currentPage,   // ✅ fixed
+                    pages: action.payload.totalPages,   // ✅ fixed
                     total: action.payload.total
                 };
                 state.lastFetched = Date.now();
@@ -100,4 +100,4 @@ const productSlice = createSlice({
 });
 
 export const { setFilter, clearFilters, resetError, setPage } = productSlice.actions;
-export default productSlice.reducer; 
+export default productSlice.reducer;

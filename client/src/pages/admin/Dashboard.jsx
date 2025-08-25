@@ -37,7 +37,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!token || !user || user.role !== 'admin') {
-      console.log('Auth check failed:', { token: !!token, user: !!user, role: user?.role });
       navigate('/login');
       return;
     }
@@ -46,7 +45,6 @@ const Dashboard = () => {
 
   const fetchStats = async () => {
     try {
-      console.log('Making request with token:', token);
       const { data } = await axios.get(`${config.API_URL}/dashboard/stats`, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -54,8 +52,6 @@ const Dashboard = () => {
       });
       setStats(data);
     } catch (error) {
-      console.error('Dashboard error:', error);
-      console.log('Response details:', error.response?.data);
       if (error.response?.status === 401 || error.response?.status === 403) {
         navigate('/login');
       }

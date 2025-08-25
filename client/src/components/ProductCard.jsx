@@ -71,7 +71,7 @@ const ProductCard = ({ product }) => {
 
         <p className="mt-1 text-xs text-gray-500 line-clamp-2">{product.description}</p>
 
-        <div className="mt-4 flex items-center justify-between">
+        <div className="min-h-4 mt-4 flex items-center justify-between">
           <p className="text-lg font-semibold text-gray-900">₹{product.price?.toFixed(2)}</p>
           {product.stock > 0 && (
             <p className="text-sm text-gray-500">

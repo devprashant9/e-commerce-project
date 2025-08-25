@@ -49,15 +49,6 @@ const Checkout = () => {
         throw new Error('Authentication required');
       }
 
-      console.log('Creating PayPal order with data:', {
-        items: items.map(item => ({
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price
-        })),
-        totalAmount: totalAmount
-      });
-
       const response = await axios.post(
         `${config.API_URL}/payments/create-paypal-order`,
         { 
@@ -72,7 +63,7 @@ const Checkout = () => {
         }
       );
 
-      console.log('PayPal order created successfully:', response.data);
+    
       return response.data.id;
     } catch (error) {
       console.error('PayPal order creation error details:', {
@@ -97,8 +88,7 @@ const Checkout = () => {
   const onApprove = useCallback(async (data, actions) => {
     try {
         setLoading(true);
-        console.log('Payment approved by user, capturing payment...', { orderID: data.orderID });
-
+        
         // First capture the PayPal payment
         const captureResponse = await axios.post(
             `${config.API_URL}/payments/capture-paypal-payment`,
@@ -107,7 +97,6 @@ const Checkout = () => {
         );
 
         if (captureResponse.data) {
-            console.log('Payment captured successfully, creating order...');
 
             // Then create the order in our database
             const orderResponse = await axios.post(
@@ -128,7 +117,7 @@ const Checkout = () => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            console.log('Order created successfully:', orderResponse.data);
+            
             dispatch(clearCart());
             navigate('/orders');
             showToast.success('Payment successful! Order has been placed.');
@@ -151,6 +140,7 @@ const Checkout = () => {
 }, [token, address, items, totalAmount, dispatch, navigate]);
 
   const handleOrderCreation = useCallback(async (paymentMethod, paymentId = null) => {
+    
     try {
       setLoading(true);
       setError(null);
@@ -212,6 +202,8 @@ const Checkout = () => {
   }, [address, items, totalAmount, token, dispatch, navigate]);
 
   const handleSubmit = useCallback(async (e) => {
+   
+
     e.preventDefault();
     if (paymentMethod === 'cod') {
       await handleOrderCreation('cod');

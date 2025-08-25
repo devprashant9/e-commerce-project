@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard';
 import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
+import Pagination from '../components/Pagination';
 
 // Ensure we have a valid API URL
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -122,11 +123,11 @@ const Home = () => {
               <h3 className="font-medium mb-2">Categories</h3>
               <div className="space-y-2">
                 <button
-                  onClick={() => handleCategoryChange('all')}
+                  onClick={() => handleCategoryChange("all")}
                   className={`px-3 py-1 rounded-full text-sm ${
-                    filters.category === 'all'
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                    filters.category === "all"
+                      ? "bg-indigo-600 text-white"
+                      : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                   }`}
                 >
                   All
@@ -142,11 +143,12 @@ const Home = () => {
                       onClick={() => handleCategoryChange(category.name)}
                       className={`px-3 py-1 rounded-full text-sm ml-2 ${
                         filters.category === category.name
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                          ? "bg-indigo-600 text-white"
+                          : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                       }`}
                     >
-                      {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+                      {category.name.charAt(0).toUpperCase() +
+                        category.name.slice(1)}
                     </button>
                   ))
                 )}
@@ -158,7 +160,9 @@ const Home = () => {
                 <input
                   type="number"
                   value={priceRange.min}
-                  onChange={(e) => handlePriceChange('min', Number(e.target.value))}
+                  onChange={(e) =>
+                    handlePriceChange("min", Number(e.target.value))
+                  }
                   placeholder="Min"
                   className="w-24 px-2 py-1 border border-gray-300 rounded"
                 />
@@ -166,7 +170,9 @@ const Home = () => {
                 <input
                   type="number"
                   value={priceRange.max}
-                  onChange={(e) => handlePriceChange('max', Number(e.target.value))}
+                  onChange={(e) =>
+                    handlePriceChange("max", Number(e.target.value))
+                  }
                   placeholder="Max"
                   className="w-24 px-2 py-1 border border-gray-300 rounded"
                 />
@@ -194,11 +200,16 @@ const Home = () => {
       </div>
 
       {/* No Results */}
-      {(!filteredItems.products && filteredItems.length === 0) || (filteredItems.products && filteredItems.products.length === 0) && (
-        <div className="text-center py-10">
-          <p className="text-gray-500">No products found matching your criteria</p>
-        </div>
-      )}
+      {(!filteredItems.products && filteredItems.length === 0) ||
+        (filteredItems.products && filteredItems.products.length === 0 && (
+          <div className="text-center py-10">
+            <p className="text-gray-500">
+              No products found matching your criteria
+            </p>
+          </div>
+        ))}
+
+      <Pagination />
     </div>
   );
 };

@@ -94,25 +94,18 @@ export const createProduct = async (req, res, next) => {
             throw new ApiError(400, 'Please upload an image');
         }
 
-        console.log('File upload details:', {
-            path: req.file.path,
-            filename: req.file.filename,
-            mimetype: req.file.mimetype
-        });
+    
 
         // Upload to Cloudinary
         const cloudinaryResult = await uploadToCloudinary(req.file);
-        console.log('Cloudinary upload result:', {
-            url: cloudinaryResult.url,
-            public_id: cloudinaryResult.public_id
-        });
+        
 
         // Delete the local file after upload
         try {
-            console.log('Attempting to delete file:', req.file.path);
+           
             await fs.access(req.file.path);  // Check if file exists
             await fs.unlink(req.file.path);
-            console.log('Successfully deleted file:', req.file.path);
+            
         } catch (error) {
             console.error('Error deleting file:', {
                 path: req.file.path,

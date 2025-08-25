@@ -11,11 +11,8 @@ const OrderHistory = () => {
   const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    console.log('OrderHistory component mounted');
-    console.log('Current state:', { hasToken: !!token, orderCount: orders.length, loading, error });
-
     if (token) {
-      console.log('Dispatching fetchUserOrders');
+     
       dispatch(fetchUserOrders());
     } else {
       console.log('No token available, skipping order fetch');
@@ -39,15 +36,9 @@ const OrderHistory = () => {
     }
   };
 
-  console.log('OrderHistory rendering with:', {
-    loading,
-    error,
-    orderCount: orders.length,
-    orderStatuses: orders.map(order => order.status)
-  });
+ 
 
   if (loading) {
-    console.log('Showing loading state');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -67,7 +58,7 @@ const OrderHistory = () => {
   }
 
   if (!orders || orders.length === 0) {
-    console.log('No orders found, showing empty state');
+   
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -91,13 +82,6 @@ const OrderHistory = () => {
 
       <div className="space-y-8">
         {orders.map((order, index) => {
-          console.log(`Rendering order ${index + 1}:`, {
-            id: order._id,
-            status: order.status,
-            items: order.items?.length || 0,
-            totalAmount: order.totalAmount,
-            date: order.createdAt
-          });
           
           return (
             <div key={order._id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
