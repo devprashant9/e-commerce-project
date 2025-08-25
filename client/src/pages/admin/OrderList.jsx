@@ -37,12 +37,14 @@ const OrderList = () => {
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const { token } = useSelector((state) => state.auth);
+  
 
   useEffect(() => {
     fetchOrders();
   }, []);
 
   const fetchOrders = async () => {
+    
     try {
       const response = await axios.get(
         `${config.API_URL}/orders/admin`,
@@ -50,8 +52,9 @@ const OrderList = () => {
           headers: { Authorization: `Bearer ${token}` }
         }
       );
+     
       // Sort orders by date, newest first
-      const sortedOrders = response.data.sort((a, b) => 
+      const sortedOrders = response.data.data.sort((a, b) => 
         new Date(b.createdAt) - new Date(a.createdAt)
       );
       setOrders(sortedOrders);
