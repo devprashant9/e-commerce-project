@@ -21,7 +21,7 @@ const __dirname = path.dirname(__filename);
 // Middleware
 app.use(cors({
     origin: [
-        'http://localhost:5173',
+        process.env.CLIENT_URL,
         'http://192.168.1.7:5173'
     ],
     credentials: true

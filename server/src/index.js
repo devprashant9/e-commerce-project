@@ -30,7 +30,8 @@ app.listen(PORT, () => {
 
 // Middleware
 app.use(cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173"
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
 }));
 app.use(morgan('dev'));
 app.use(express.json());
